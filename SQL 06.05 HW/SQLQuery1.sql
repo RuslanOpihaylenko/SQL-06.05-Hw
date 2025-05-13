@@ -93,107 +93,128 @@ CREATE TABLE Students (
 );
 
 -- Faculties
-INSERT INTO Faculties (Name) VALUES
-(N'????????? ???????????'),
-(N'????????? ??????????'),
-(N'????????? ??????');
+INSERT INTO Faculties (Name) VALUES 
+('Engineering'),
+('Humanities'),
+('Sciences');
 
 -- Departments
-INSERT INTO Departments (Building, Financing, Name, FacultyId) VALUES
-(1, 100000, N'??????? ?????????????', 1),
-(2, 200000, N'??????? ???????', 2),
-(3, 150000, N'??????? ??????', 3);
+INSERT INTO Departments (Building, Financing, Name, FacultyId) VALUES 
+(1, 100000, 'Computer Science', 1),
+(2, 80000, 'Philosophy', 2),
+(3, 120000, 'Physics', 3);
 
 -- Curators
-INSERT INTO Curators (Name, Surname) VALUES
-(N'????', N'????????'),
-(N'??????', N'????????'),
-(N'??????', N'?????????');
+INSERT INTO Curators (Name, Surname) VALUES 
+('Alice', 'Johnson'),
+('Bob', 'Smith'),
+('Carol', 'Davis');
 
 -- Groups
-INSERT INTO Groups (Name, Year, DepartmentId) VALUES
-(N'???-01', 1, 1),
-(N'???-02', 2, 2),
-(N'???-03', 3, 3);
+INSERT INTO Groups (Name, Year, DepartmentId) VALUES 
+('CS-101', 1, 1),
+('PH-202', 2, 3),
+('PHL-303', 3, 2);
 
 -- GroupsCurators
-INSERT INTO GroupsCurators (CuratorId, GroupId) VALUES
+INSERT INTO GroupsCurators (CuratorId, GroupId) VALUES 
 (1, 1),
 (2, 2),
 (3, 3);
 
 -- Subjects
-INSERT INTO Subjects (Name) VALUES
-(N'?????????????'),
-(N'??????? ???????'),
-(N'???????? ??????');
+INSERT INTO Subjects (Name) VALUES 
+('Algorithms'),
+('Ethics'),
+('Quantum Mechanics');
 
 -- Teachers
-INSERT INTO Teachers (IsProfessor, Name, Salary, Surname) VALUES
-(1, N'?????', 15000, N'?????????'),
-(0, N'?????????', 12000, N'??????'),
-(1, N'????????', 16000, N'??????');
+INSERT INTO Teachers (IsProfessor, Name, Salary, Surname) VALUES 
+(1, 'John', 5000, 'Williams'),
+(0, 'Emily', 3500, 'Brown'),
+(1, 'Daniel', 6000, 'Taylor');
 
 -- Lectures
-INSERT INTO Lectures (Date, SubjectId, TeacherId) VALUES
-('2024-12-01', 1, 1),
-('2024-11-20', 2, 2),
-('2024-10-15', 3, 3);
+INSERT INTO Lectures (Date, SubjectId, TeacherId) VALUES 
+('2025-03-01', 1, 1),
+('2025-04-15', 2, 2),
+('2025-02-20', 3, 3);
 
 -- GroupsLectures
-INSERT INTO GroupsLectures (GroupId, LectureId) VALUES
+INSERT INTO GroupsLectures (GroupId, LectureId) VALUES 
 (1, 1),
-(2, 2),
-(3, 3);
+(2, 3),
+(3, 2);
 
 -- Students
-INSERT INTO Students (Name, Rating, Surname) VALUES
-(N'??????', 5, N'????????'),
-(N'?????', 4, N'??????'),
-(N'??????', 3, N'????????');
+INSERT INTO Students (Name, Rating, Surname) VALUES 
+('Michael', 5, 'Clark'),
+('Sarah', 4, 'Lewis'),
+('David', 3, 'Walker');
 
 -- GroupsStudents
-INSERT INTO GroupsStudents (GroupId, StudentId) VALUES
+INSERT INTO GroupsStudents (GroupId, StudentId) VALUES 
 (1, 1),
 (2, 2),
 (3, 3);
 
+GO
 SELECT Building FROM Departments
 WHERE SUM(Departments.Financing)< 100000;
+
+GO
 SELECT Groups.Name FROM Groups
 INNER JOIN Departments
 ON Departments.Id = Groups.Id
 WHERE Groups.Year=5 AND Departments.Name = 'Software Development';
+
+GO
 SELECT Groups.Name FROM Groups
 INNER JOIN Students
 ON Groups.Id = Students.Id
 WHERE AVG(Students.Rating)>Students.Rating AND Groups.Name = 'D221';
+
+GO
 SELECT Teachers.Surname, Teachers.Name FROM Teachers
-WHERE Teachers.Salary>AVG(Teachers.Salary WHERE Teachers.IsProfessor=1;)
+WHERE Teachers.IsProfessor=1 AND
+Teachers.Salary>AVG(Teachers.Salary);
+
+GO
 SELECT Groups.Name FROM Groups
 INNER JOIN Curators
 ON Groups.Id = Curators.Id
 WHERE COUNT(Curators.Id)>1;
+
+GO
 SELECT Groups.Name FROM Groups
 INNER JOIN Students
 ON Groups.Id = Students.Id
 WHERE AVG(Students.Rating)<MIN(Students.Rating) AND Groups.Year=5;
+
+GO
 SELECT Faculties.Name FROM Faculties
 INNER JOIN Departments
 ON Faculties.Id = Departments.Id
-WHERE SUM(Departments.Financing)>SUM(Departments.Financing WHERE Faculties.Name='?omputer Science');
+WHERE Faculties.Name='Computer Science' AND
+SUM(Departments.Financing)>SUM(Departments.Financing);
+
+GO
 SELECT Subjects.Name, Teachers.Name, Teachers.Surname FROM Subjects
 INNER JOIN Teachers
 ON Subjects.Id = Teachers.Id
 INNER JOIN Lectures
 ON Subjects.Id = Lectures.Id
 WHERE COUNT(*)= MAX(Lectures.Id);
+
+GO
 SELECT Subjects.Name, Teachers.Name, Teachers.Surname FROM Subjects
 INNER JOIN Teachers
 ON Subjects.Id = Teachers.Id
 INNER JOIN Lectures
 ON Subjects.Id = Lectures.Id
 WHERE COUNT(*)= MIN(Lectures.Id);
+
+GO
 SELECT COUNT(Students.Id) AS numbers, COUNT(Subjects.Id) AS numbers FROM Students,Subjects
 INNER JOIN Departments
 ON Subjects.Id = Departments.Id
